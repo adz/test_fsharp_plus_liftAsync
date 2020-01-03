@@ -1,6 +1,7 @@
 When try to build:
 
-```$ dotnet build
+```
+$ dotnet build
 Microsoft (R) Build Engine version 16.4.0+e901037fe for .NET Core
 Copyright (C) Microsoft Corporation. All rights reserved.
 
@@ -24,7 +25,7 @@ Verbose error:
 If the subsequent usage of `response` is taken out, it compiles ok. Why?
 
 Also, if I annotate the type of response like this:
-```
+```fsharp
 let! (response : HttpResponse) =
     utcNow |> recordTimestampUsingFSData |> liftAsync
 ```
@@ -34,7 +35,7 @@ _However,_ In my project I am having this issue on, it doesn't. I can't tell the
 
 My work around I have found is I have to do this:
 
-```
+```fsharp
 let! response =
     updateExchangeProfile url updatedProfile
     |> (liftAsync : Async<HttpResponse> -> ResultT<Async<Result<HttpResponse,ExchangeError>>>)
@@ -42,7 +43,7 @@ let! response =
 
 or use specific functions:
 
-```
+```fsharp
 let! response =
     updateExchangeProfile url updatedProfile
     |> Async.map Ok |> ResultT    
